@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil</title>
+</head>
+<script>
+function logout() {
+    // Get all cookies in a single string
+    const cookies = document.cookie.split(";");
+
+    // Iterate over each cookie
+    for (let cookie of cookies) {
+        // Split the cookie into name and value
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+
+        // Set the cookie with an expired date to delete it
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+    }
+    location.reload();
+}
+</script>
+<body>
+    <block>
+        <strong>Nombre:</strong>
+        <p id="nombre"></p>
+    </block>
+    <block>
+        <strong>Apellidos:</strong>
+        <p id="apellidos"></p>
+    </block>
+    <button type="button" onclick="logout()">Cerrar Sesion</button>
+</body>
+</html>

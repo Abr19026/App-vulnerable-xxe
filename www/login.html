@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de sesión</title>
+</head>
+<script>
+function enviarDatos() {
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+
+    // Crea datos XML
+    var datosXML = '<?xml version="1.0" encoding="UTF-8"?>';
+    datosXML += '<datosSesion>';
+    datosXML += '<username>' + username + '</username>';
+    datosXML += '<password>' + password + '</password>';
+    datosXML += '</datosSesion>';
+
+    // envía datos
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/login", true);
+    xhr.setRequestHeader("Content-Type", "text/xml");
+    xhr.onreadystatechange = function () {
+        if(xhr.readyState === 4) {
+            if(xhr.status === 200) {
+                // si tuvo éxito
+                console.log(xhr.responseText);
+                window.location.replace("/perfil")
+            } else {
+            // si falló
+                var elemento = document.getElementById("mensajeError");
+                elemento.style.display = "block";
+            }
+        }
+    };
+    xhr.send(datosXML);
+}
+</script>
+<body>
+    <h2>Por favor inicie sesión</h2>
+    <form>
+        <label for="username">Nombre de usuario:</label><br>
+        <input type="text" id="username" name="username"><br>
+
+        <label for="password">Contraseña:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+
+        <button type="button" onclick="enviarDatos()">Submit</button>
+    </form>
+    <h2 id="mensajeError" style="color: red; display: none;">
+        Datos incorrectos, intente de nuevo
+    </h2>
+</body>  
+</html>
