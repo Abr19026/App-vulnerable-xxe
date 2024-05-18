@@ -62,7 +62,7 @@ class ManejadorDePedidos(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open(f"{self.prefijo_htmls}login.html", "rb") as file:
+                with open(f"{prefijo_htmls}login.html", "rb") as file:
                     self.wfile.write(file.read())
 
         elif recurso == '/perfil':
@@ -75,7 +75,7 @@ class ManejadorDePedidos(BaseHTTPRequestHandler):
                 Nombre = datos_perfil.find("Nombre").text
                 Apellidos =datos_perfil.find("Apellidos").text
                 # obtiene plantilla de perfil
-                plantillaHTML = EHT.parse(f"{self.prefijo_htmls}perfil.html")
+                plantillaHTML = EHT.parse(f"{prefijo_htmls}perfil.html")
                 plantillaHTML.getroot().get_element_by_id("nombre").text = Nombre
                 plantillaHTML.getroot().get_element_by_id("apellidos").text = Apellidos
                 self.wfile.write(EHT.tostring(plantillaHTML))
