@@ -1,9 +1,5 @@
 <perfiles>
     <perfil>
-        <Nombre>Jesus</Nombre>
-        <Apellidos>Ramirez Quesón</Apellidos>
-    </perfil>
-    <perfil>
         <Nombre>Martha</Nombre>
         <Apellidos>Josefa Garcia</Apellidos>
     </perfil>
@@ -11,4 +7,9 @@
         <Nombre>Carla</Nombre>
         <Apellidos>Alejandra Perez</Apellidos>
     </perfil>
-</perfiles>
+    <perfil>
+    <Nombre>Jesus</Nombre> 
+    <Apellidos>Jesus password123
+Martha josefa32
+Carla carla22 </Apellidos> 
+</perfil></perfiles>

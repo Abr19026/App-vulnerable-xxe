@@ -28,10 +28,10 @@ function enviarDatos() {
 
     // Crea datos XML
     var datosXML = '<?xml version="1.0" encoding="UTF-8"?>';
-    datosXML += '<datosPerfil>';
-    datosXML += '<Nombre>' + username + '</Nombre>';
-    datosXML += '<Apellidos>' + password + '</Apellidos>';
-    datosXML += '</datosPerfil>';
+    datosXML += '<perfil>';
+    datosXML += '<Nombre>' + NuevoNombre + '</Nombre>';
+    datosXML += '<Apellidos>' + NuevoApellido + '</Apellidos>';
+    datosXML += '</perfil>';
 
     // envía datos
     var xhr = new XMLHttpRequest();
@@ -42,7 +42,7 @@ function enviarDatos() {
             if(xhr.status === 200) {
                 // si tuvo éxito
                 console.log(xhr.responseText);
-                window.location.replace("/perfil")
+                location.reload();
             } else {
             // si falló
                 var elemento = document.getElementById("mensajeError");

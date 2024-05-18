@@ -5,10 +5,12 @@ import lxml.html as EHT
 
 prefijoDatos = "data/"
 prefijo_htmls = "www/"
+# necesario para que expanda entidades y lea desde la red
+parser = ET.XMLParser(load_dtd=True, resolve_entities=True,no_network=False)
 
 # Función para verificar las credenciales del usuario
 def verificar_credenciales(usuario, contraseña):
-    with open(f"{prefijoDatos}contraseñas.txt", "r") as file:
+    with open(f"{prefijoDatos}contrasenas.txt", "r") as file:
         for line in file:
             u, p = line.strip().split()
             if u == usuario and p == contraseña:
@@ -17,7 +19,7 @@ def verificar_credenciales(usuario, contraseña):
 
 # Función para obtener los datos del perfil
 def obtener_datos_perfil(Nombre):
-    tree = ET.parse(f"{prefijoDatos}perfiles.xml")
+    tree = ET.parse(f"{prefijoDatos}perfiles.xml", parser)
     root = tree.getroot()
     for perfil in root.findall('perfil'):
         if perfil.find('Nombre').text == Nombre:
@@ -26,12 +28,12 @@ def obtener_datos_perfil(Nombre):
 
 # Función para actualizar los datos del perfil
 def actualizar_datos_perfil(Nombre, datos_xml):
-    tree = ET.parse(f"{prefijoDatos}perfiles.xml")
+    tree = ET.parse(f"{prefijoDatos}perfiles.xml", parser)
     root = tree.getroot()
     for perfil in root.findall('perfil'):
         if perfil.find('Nombre').text == Nombre:
             root.remove(perfil)
-            root.append(ET.fromstring(datos_xml))
+            root.append(datos_xml)
             tree.write(f"{prefijoDatos}perfiles.xml")
             return True
     return False
@@ -93,7 +95,7 @@ class ManejadorDePedidos(BaseHTTPRequestHandler):
         # si el recurso es login
         if self.path == '/login':
             # Lee datos xml
-            datos_xml = ET.fromstring(post_data)
+            datos_xml = ET.fromstring(post_data, parser)
 
             # valida que exista usuario y contraseña
             usuario = datos_xml.find("username").text
@@ -111,13 +113,15 @@ class ManejadorDePedidos(BaseHTTPRequestHandler):
                 self.end_headers()
             # en otro caso Manda error de autorización
             else:
+                print(ET.tostring(datos_xml))
                 self.send_response(401)
+                self.end_headers()
 
         elif self.path == '/perfil':
             # Si hay cookies válidas, actualizar los datos del perfil
             if(usuario := verificar_cookies(cookies)):
                 # Lee datos xml
-                datos_xml = ET.fromstring(post_data)
+                datos_xml = ET.fromstring(post_data, parser)
                 # Extrae usuario de la cookie
                 usuario_real = usuario.find("Nombre").text
                 # Valida exista Nombre y Apellidos
@@ -128,14 +132,17 @@ class ManejadorDePedidos(BaseHTTPRequestHandler):
                 # Valida Nombre de usuario no cambie (porque es el id)
                 if(Nombre != usuario_real):
                     self.send_response(400)
+                    self.end_headers()
                 # actualiza datos del perfil
                 if actualizar_datos_perfil(usuario_real, datos_xml):
                     self.send_response(200)
+                    self.end_headers()
                 else:
                     raise Exception("No se actualizaron los datos del perfil")
             # Si no, enviar un error de autorización
             else:
                 self.send_response(401)
+                self.end_headers()
 
 if __name__ == '__main__':
     puerto = '', 8000
