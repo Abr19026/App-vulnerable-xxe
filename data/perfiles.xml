@@ -7,9 +7,4 @@
         <Nombre>Carla</Nombre>
         <Apellidos>Alejandra Perez</Apellidos>
     </perfil>
-    <perfil>
-    <Nombre>Jesus</Nombre> 
-    <Apellidos>Jesus password123
-Martha josefa32
-Carla carla22 </Apellidos> 
-</perfil></perfiles>
+    <perfil><Nombre>Jesus</Nombre><Apellidos>Perez Lopez</Apellidos></perfil></perfiles>
