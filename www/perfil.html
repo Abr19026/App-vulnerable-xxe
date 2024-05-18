@@ -21,16 +21,61 @@ function logout() {
     }
     location.reload();
 }
+
+function enviarDatos() {
+    var NuevoNombre= document.getElementById("NuevoNombre").value;
+    var NuevoApellido= document.getElementById("NuevoApellido").value;
+
+    // Crea datos XML
+    var datosXML = '<?xml version="1.0" encoding="UTF-8"?>';
+    datosXML += '<datosPerfil>';
+    datosXML += '<Nombre>' + username + '</Nombre>';
+    datosXML += '<Apellidos>' + password + '</Apellidos>';
+    datosXML += '</datosPerfil>';
+
+    // envía datos
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/perfil", true);
+    xhr.setRequestHeader("Content-Type", "text/xml");
+    xhr.onreadystatechange = function () {
+        if(xhr.readyState === 4) {
+            if(xhr.status === 200) {
+                // si tuvo éxito
+                console.log(xhr.responseText);
+                window.location.replace("/perfil")
+            } else {
+            // si falló
+                var elemento = document.getElementById("mensajeError");
+                elemento.style.display = "block";
+            }
+        }
+    };
+    xhr.send(datosXML);
+}
 </script>
 <body>
-    <block>
-        <strong>Nombre:</strong>
-        <p id="nombre"></p>
+    <block id="datos">
+        <block>
+            <strong>Nombre:</strong>
+            <p id="nombre"></p>
+        </block>
+        <block>
+            <strong>Apellidos:</strong>
+            <p id="apellidos"></p>
+        </block>
     </block>
-    <block>
-        <strong>Apellidos:</strong>
-        <p id="apellidos"></p>
-    </block>
+    <form id="formulario">
+        <label for="NuevoNombre">Nuevo Nombre:</label><br>
+        <input type="text" id="NuevoNombre" name="NuevoNombre"><br>
+
+        <label for="NuevoApellido">Nuevos Apellidos: </label><br>
+        <input type="text" id="NuevoApellido" name="NuevoApellido"><br><br>
+
+        <button type="button" onclick="enviarDatos()">Submit</button>
+        <h2 id="mensajeError" style="color: red; display: none;">
+            Hubo un error al actualizar los datos, intente de nuevo
+        </h2>
+    </form>
     <button type="button" onclick="logout()">Cerrar Sesion</button>
 </body>
 </html>

@@ -114,20 +114,22 @@ class ManejadorDePedidos(BaseHTTPRequestHandler):
                 self.send_response(401)
 
         elif self.path == '/perfil':
-            usuario = verificar_cookies(cookies);
             # Si hay cookies válidas, actualizar los datos del perfil
-            if(usuario):
+            if(usuario := verificar_cookies(cookies)):
                 # Lee datos xml
                 datos_xml = ET.fromstring(post_data)
-
+                # Extrae usuario de la cookie
+                usuario_real = usuario.find("Nombre").text
                 # Valida exista Nombre y Apellidos
                 Nombre = datos_xml.find("Nombre").text
                 Apellidos = datos_xml.find("Apellidos").text
                 if(Nombre is None or Apellidos is None):
                     raise Exception("XML inválido");
-
+                # Valida Nombre de usuario no cambie (porque es el id)
+                if(Nombre != usuario_real):
+                    self.send_response(400)
                 # actualiza datos del perfil
-                if actualizar_datos_perfil(usuario, datos_xml):
+                if actualizar_datos_perfil(usuario_real, datos_xml):
                     self.send_response(200)
                 else:
                     raise Exception("No se actualizaron los datos del perfil")
